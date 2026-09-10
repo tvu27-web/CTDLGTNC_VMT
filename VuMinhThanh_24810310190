@@ -1,0 +1,167 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+struct VeMayBay
+{
+    int maVe;
+    string khoiHanh;
+    string den;
+    float giaVe;
+};
+
+void Nhap(VeMayBay a[], int n)
+{
+    for(int i = 0; i < n; i++)
+    {
+        cout << "\nNhap ve thu " << i + 1 << ":";
+
+        cout << "\nMa ve: ";
+        cin >> a[i].maVe;
+
+        cin.ignore();
+
+        cout << "Khoi hanh: ";
+        getline(cin, a[i].khoiHanh);
+
+        cout << "Den: ";
+        getline(cin, a[i].den);
+
+        cout << "Gia ve: ";
+        cin >> a[i].giaVe;
+    }
+}
+
+void Xuat(VeMayBay a[], int n)
+{
+    cout << "\n";
+    cout << left << setw(10) << "Ma ve"
+         << setw(20) << "Khoi hanh"
+         << setw(20) << "Den"
+         << setw(15) << "Gia ve" << endl;
+
+    for(int i = 0; i < n; i++)
+    {
+        cout << left << setw(10) << a[i].maVe
+             << setw(20) << a[i].khoiHanh
+             << setw(20) << a[i].den
+             << setw(15) << a[i].giaVe << endl;
+    }
+}
+
+void HoanVi(VeMayBay &a, VeMayBay &b)
+{
+    VeMayBay temp = a;
+    a = b;
+    b = temp;
+}
+
+void QuickSort(VeMayBay a[], int left, int right)
+{
+    int i = left;
+    int j = right;
+
+    float pivot = a[(left + right) / 2].giaVe;
+
+    while(i <= j)
+    {
+        while(a[i].giaVe < pivot)
+            i++;
+
+        while(a[j].giaVe > pivot)
+            j--;
+
+        if(i <= j)
+        {
+            HoanVi(a[i], a[j]);
+            i++;
+            j--;
+        }
+    }
+
+    if(left < j)
+        QuickSort(a, left, j);
+
+    if(i < right)
+        QuickSort(a, i, right);
+}
+
+void TimKiemNhiPhan(VeMayBay a[], int n, float X)
+{
+    int left = 0;
+    int right = n - 1;
+    int mid;
+    bool timThay = false;
+
+    while(left <= right)
+    {
+        mid = (left + right) / 2;
+
+        if(a[mid].giaVe == X)
+        {
+            timThay = true;
+
+            int i = mid;
+
+            while(i >= 0 && a[i].giaVe == X)
+                i--;
+
+            i++;
+
+            while(i < n && a[i].giaVe == X)
+            {
+                cout << left << setw(10) << a[i].maVe
+                     << setw(20) << a[i].khoiHanh
+                     << setw(20) << a[i].den
+                     << setw(15) << a[i].giaVe << endl;
+
+                i++;
+            }
+
+            break;
+        }
+        else if(a[mid].giaVe < X)
+        {
+            left = mid + 1;
+        }
+        else
+        {
+            right = mid - 1;
+        }
+    }
+
+    if(!timThay)
+    {
+        cout << "\nKhong co ve nao co gia " << X << endl;
+    }
+}
+
+int main()
+{
+    VeMayBay a[100];
+    int n;
+    float X;
+
+    cout << "Nhap so luong ve may bay: ";
+    cin >> n;
+
+    Nhap(a, n);
+
+    cout << "\nDANH SACH VE MAY BAY VUA NHAP:";
+    Xuat(a, n);
+
+    QuickSort(a, 0, n - 1);
+
+    cout << "\nDANH SACH VE SAU KHI SAP XEP:";
+    Xuat(a, n);
+
+    cout << "\nNhap gia ve X can tim: ";
+    cin >> X;
+
+    cout << "\nCAC VE CO GIA " << X << ":";
+    TimKiemNhiPhan(a, n, X);
+
+    return 0;
+}
